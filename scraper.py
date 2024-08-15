@@ -11,25 +11,28 @@ def get_article_content(url):
         soup = BeautifulSoup(response.text, 'html.parser')
 
         # Extract the title of the article
-        title = soup.find('h1').get_text()
+        title = soup.title.string
+        paragraphs = soup.find_all(attrs={'data-component-name':'p'})
+        content = ''
 
-        # Extract the content of the article
-        paragraphs = soup.find_all('p')
-        content = '\n'.join([paragraph.get_text() for paragraph in paragraphs])
+        # Extract all paragraphs
+        paragraphs = soup.find_all("p")
+
+        # Print each paragraph separately
+        for paragraph in paragraphs:
+            print(paragraph.text)
+            print("-" * 20)  # Separator between paragraphs
 
         return title, content
     else:
         print(f"Failed to retrieve the page. Status code: {response.status_code}")
         return None, None
 
-# Example URL from BBC News
-article_url = 'https://edition.cnn.com/travel/article/scenic-airport-landings-2020/index.html'
+# Example URL 
+article_url = 'https://10best.usatoday.com/awards/travel/best-beach-in-florida-2024/'
 
-# Get the article title and content
 title, content = get_article_content(article_url)
-
-# Display the results
-if title and content:
-    print(f"Title: {title}\n\nContent:\n{content}")
-else:
-    print("Failed to retrieve article information.")
+print('-'*50)
+if(title != None and content != None): 
+    print(title)
+    print(content)
